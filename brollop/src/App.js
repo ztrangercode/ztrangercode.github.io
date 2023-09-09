@@ -8,27 +8,36 @@ function App() {
     <div className="App">
       <div className="container">
         <div className="art">
-          <header className="App-header">Sandra och Fredrik</header>
+          <p>Hjärtligt välkomna till vigseln mellan </p>
           <p>
-            Datum: 2024-07-20 eller 2024-07-27 (Preliminär) <br />
-            Tid: 15:00 (Preliminär)
-          </p>
-
-          <p>
-            Vigsel: <br />
-            Mo Kyrka <br />
-            549 92 Moholm
+            <span className="LargeNames">Sandra och Fredrik</span>
           </p>
           <p>
-            Fest: (16:00 till 01:00) <br />
-            Moholms Herrgård 549 92 Moholm
-          </p>
-
-          <p>
-            Övernattning: Det finns några rum på Moholms Herrgård, se
-            <a href="http://www.moholmsherrgard.se/hotellrum.html">
-              http://www.moholmsherrgard.se/hotellrum.html
+            <a href="https://goo.gl/maps/5kBNjbF8HrQjau8W9">
+              Mo Kyrka, 549 92 Moholm
             </a>
+            <br />
+            Lördagen den 20:e Juli 2024, kl. 15:00 <br />
+          </p>
+          <p>
+            Därefter middag och fest på
+            <br />
+            <a href="https://goo.gl/maps/joCJhbMj3YbN5z6p7">
+              Moholms Herrgård, 549 92 Moholm
+            </a>
+          </p>
+          <p>
+            <a href="https://forms.gle/9UbNJMQUdg6XDWuy5">
+              Klicka här för att anmäla
+            </a>
+          </p>
+
+          <p>
+            Övernattning: Det finns några rum på <br />
+            <a href="http://www.moholmsherrgard.se/hotellrum.html">
+              Moholms Herrgård
+            </a>{" "}
+            <br />
             och hör av er till oss om ni är intresserade!
           </p>
         </div>
