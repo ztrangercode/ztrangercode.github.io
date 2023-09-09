@@ -28,7 +28,7 @@ function App() {
           </p>
           <p>
             <a href="https://forms.gle/9UbNJMQUdg6XDWuy5">
-              Klicka här för att anmäla
+              Klicka här för att anmäla er
             </a>
           </p>
 
