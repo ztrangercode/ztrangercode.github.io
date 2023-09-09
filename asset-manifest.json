@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.29b9f542.css",
-    "main.js": "/static/js/main.f13072a6.js",
+    "main.css": "/static/css/main.af4dbf2d.css",
+    "main.js": "/static/js/main.c5c034f2.js",
     "static/js/787.24bb0e5e.chunk.js": "/static/js/787.24bb0e5e.chunk.js",
-    "static/media/moholms_herrgard.jpg": "/static/media/moholms_herrgard.cd931cd18bf715e3d805.jpg",
-    "static/media/ringar.jpg": "/static/media/ringar.3069fdff4aa206e564d8.jpg",
+    "static/media/Upper_left_corner.jpg": "/static/media/Upper_left_corner.cda382963a6aadf12919.jpg",
+    "static/media/Down_right_corner.jpg": "/static/media/Down_right_corner.4a4fef4d55e548ed5f1e.jpg",
     "index.html": "/index.html",
-    "main.29b9f542.css.map": "/static/css/main.29b9f542.css.map",
-    "main.f13072a6.js.map": "/static/js/main.f13072a6.js.map",
+    "main.af4dbf2d.css.map": "/static/css/main.af4dbf2d.css.map",
+    "main.c5c034f2.js.map": "/static/js/main.c5c034f2.js.map",
     "787.24bb0e5e.chunk.js.map": "/static/js/787.24bb0e5e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.29b9f542.css",
-    "static/js/main.f13072a6.js"
+    "static/css/main.af4dbf2d.css",
+    "static/js/main.c5c034f2.js"
   ]
 }
