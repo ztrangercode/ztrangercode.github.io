@@ -11,27 +11,42 @@
 }
 
 .App-HG {
-  width:70%;
+  width: 70%;
 }
 
+.App-UL {
+  width: 20%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
+.App-DR {
+  width: 12%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
 
-@media only screen and (min-width: 640px)
-{
+@media only screen and (min-width: 640px) {
   .container {
     width: 640px;
   }
 }
-@media only screen and (min-width: 979.1px)
-{
+
+@media only screen and (min-width: 979.1px) {
   .container {
     width: 960px;
   }
 }
-@media only screen and (min-width: 1300px)
-{
+
+@media only screen and (min-width: 1300px) {
   .container {
     width: 1280px;
+    top: 200px;
+  }
+  .App-UL {
+    width: 200px;
   }
 }
 
@@ -39,9 +54,11 @@
   margin: auto;
   float: none;
   background-color: aqua;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-
-
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
