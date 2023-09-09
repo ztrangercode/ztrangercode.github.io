@@ -1,0 +1,14 @@
+dark color outside of images -> too make it like a card
+white shadow on text to make it a bit easier to read on top of the image
+
+google font
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&display=swap" rel="stylesheet">
+
+font-family: 'Cormorant Garamond', serif;
+
+länk färg - mörk grön
+SÄTTA a.color, inte sätta visited färg. Sätt a.hover för datoranvändare
+
+Formulär flik 1 har namn, byt
