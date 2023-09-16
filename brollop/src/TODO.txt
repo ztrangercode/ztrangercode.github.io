@@ -1,5 +1,3 @@
 Kommentarer från Andreas:
 dark color outside of images -> too make it like a card
 white shadow on text to make it a bit easier to read on top of the image
-
-Konverta bilder till webp (blir mindre kb då)

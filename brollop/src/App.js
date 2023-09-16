@@ -1,6 +1,6 @@
 //import { useMediaQuery } from 'react-responsive'
-import down_right_corner from "./Down_right_corner.jpg";
-import upper_left_corner from "./Upper_left_corner.jpg";
+import down_right_corner from "./Down_right_corner.webp";
+import upper_left_corner from "./Upper_left_corner.webp";
 import "./App.css";
 
 function App() {
