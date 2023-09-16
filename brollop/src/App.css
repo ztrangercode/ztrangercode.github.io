@@ -40,7 +40,7 @@
   text-align: center;
   letter-spacing: 0.1rem;
   font-style: italic;
-  font-family: Garamond;
+  font-family: "Cormorant Garamond", serif;
 }
 
 .container {
@@ -56,12 +56,15 @@
   font-size: calc(10px + 1vmin);
 }
 
-P {
+p {
   margin: 2em;
 }
 
-.App-link {
-  color: #61dafb;
+a {
+  color: green;
+}
+a:hover {
+  color: red;
 }
 
 @media only screen and (min-width: 640px) {
