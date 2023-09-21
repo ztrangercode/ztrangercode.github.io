@@ -4,3 +4,9 @@ white shadow on text to make it a bit easier to read on top of the image
 
 make sure the lower image is at bottom even when scrolling
 maybe: https://stackoverflow.com/questions/29893085/how-to-stick-an-image-to-the-bottom-of-the-visible-part-of-a-scrollable-div
+
+QR kod
+
+overkill:
+kalenderlänk (för att lägga in det i kalendern)
+https://www.litmus.com/blog/how-to-create-an-add-to-calendar-link-for-your-emails
