@@ -18,8 +18,8 @@
   max-width: 100%;
   width: 80%;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0px;
+  left: 0px;
   z-index: 10;
 }
 
@@ -27,8 +27,8 @@
   max-width: 100%;
   width: 30%;
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 0px;
+  right: 0px;
   z-index: 10;
 }
 
@@ -54,6 +54,7 @@
   z-index: 100;
   line-height: 2em;
   font-size: calc(10px + 1vmin);
+  overflow: auto;
 }
 
 p {

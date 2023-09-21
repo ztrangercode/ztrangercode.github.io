@@ -17,7 +17,7 @@ function App() {
               Mo Kyrka, 549 92 Moholm
             </a>
             <br />
-            Lördagen den 20:e Juli 2024, kl. 15:00 <br />
+            Lördagen den 20:e Juli 2024, kl. 14:00 <br />
           </p>
           <p>
             Därefter middag och fest på
@@ -40,10 +40,24 @@ function App() {
             <br />
             och hör av er till oss om ni är intresserade!
           </p>
+
+          <p>
+            Klädsel:
+            <br />
+            Kostym
+          </p>
+
+          <p>
+            Vi önskar att ni inte tar med barn på vigseln och festen. <br />
+            Vi hoppas att ni har förståelse för detta.
+            <br />
+            Undantag syskonbarn.
+          </p>
         </div>
       </div>
-      <img src={upper_left_corner} className="App-UL" alt="" />
-      <img src={down_right_corner} className="App-DR" alt="" />
+
+      <img src={upper_left_corner} className="App-UL" alt="upper_left_corner" />
+      <img src={down_right_corner} className="App-DR" alt="down_right_corner" />
     </div>
   );
 }
