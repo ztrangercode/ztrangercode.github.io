@@ -3,7 +3,7 @@ import down_right_corner from "./Down_right_corner.webp";
 import upper_left_corner from "./Upper_left_corner.webp";
 import "./App.css";
 
-function App() {
+function App(): JSX.Element {
   return (
     <div className="App">
       <div className="container">
