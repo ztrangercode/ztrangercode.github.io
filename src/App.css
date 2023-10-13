@@ -1,17 +1,5 @@
-.App {
+html {
   text-align: center;
-  align-content: center;
-  background-repeat: no-repeat;
-  background-position: top left;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-HG {
-  width: 70%;
 }
 
 .App-UL {
@@ -32,6 +20,11 @@
   z-index: 10;
 }
 
+.App-QR {
+  max-width: 100%;
+  width: 30%;
+}
+
 .LargeNames {
   font-size: calc(10px + 4vmin);
   line-height: 1.2;
@@ -44,21 +37,29 @@
 }
 
 .container {
-  margin: 25% auto 0 auto;
-  float: none;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  margin: 0 auto;
+  position: relative;
+  height: 100vh;
+}
+
+.article {
+  margin-right: 12%;
+  margin-left: 12%;
+  margin-top: 0%;
   position: relative;
   z-index: 100;
+  justify-content: center;
+  text-align: center;
   line-height: 2em;
   font-size: calc(10px + 1vmin);
-  overflow: auto;
 }
 
 p {
   margin: 2em;
+  background-color: white;
+  width: fit-content;
+  text-align: center;
+  align-content: center;
 }
 
 a {
@@ -70,15 +71,16 @@ a:hover {
 
 @media only screen and (min-width: 640px) {
   .container {
-    width: 640px;
-    margin: 10% auto 0 auto;
+    width: 1024px;
+    height: auto;
+    margin: 0 auto;
   }
   .App-UL {
-    left: 15%;
+    left: 0;
     width: 40%;
   }
   .App-DR {
-    right: 15%;
+    right: 0;
     width: 12%;
   }
   .LargeNames {

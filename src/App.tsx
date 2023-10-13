@@ -1,13 +1,19 @@
 //import { useMediaQuery } from 'react-responsive'
 import down_right_corner from "./Down_right_corner.webp";
 import upper_left_corner from "./Upper_left_corner.webp";
+import swish_qr from "./swish-QR-small.webp";
 import "./App.css";
 
 function App(): JSX.Element {
   return (
     <div className="App">
       <div className="container">
-        <div className="art">
+        <img
+          src={upper_left_corner}
+          className="App-UL"
+          alt="upper_left_corner"
+        />
+        <div className="article">
           <p>Hjärtligt välkomna till vigseln mellan </p>
           <p>
             <span className="LargeNames">Sandra och Fredrik</span>
@@ -31,33 +37,42 @@ function App(): JSX.Element {
               Klicka här för att anmäla er
             </a>
           </p>
+          <p>
+            Barn är underbara men den här dagen väljer vi att fira i vuxet
+            sällskap. Med undantag av syskonbarn.
+          </p>
+          <p>Klädsel: Kostym</p>
 
           <p>
-            Övernattning: Det finns några rum på <br />
+            Presenter: Vi önskar inte några saker, det viktiga är att ni kommer
+            och firar med oss. Om ni ändå vill ge något, kan ni ge oss ett
+            bidrag till våran Bröllopsresa. Swish 076-1671572 Fredrik Aronsson.
+          </p>
+
+          <p>
+            Övernattning:
+            <br />
+            Herrgården eller Mariestad (20 km) <br />
             <a href="http://www.moholmsherrgard.se/hotellrum.html">
               Moholms Herrgård
-            </a>{" "}
+            </a>
             <br />
-            och hör av er till oss om ni är intresserade!
-          </p>
-
-          <p>
-            Klädsel:
+            <a href="https://www.hotelwictoria.se/sv">Hotel Wictoria</a>
             <br />
-            Kostym
-          </p>
-
-          <p>
-            Vi önskar att ni inte tar med barn på vigseln och festen. <br />
-            Vi hoppas att ni har förståelse för detta.
+            <a href="https://hotelvanerport.se/">Hotell Vänerport</a>
             <br />
-            Undantag syskonbarn.
+            Obs om ni vill sova på herrgården kontakta oss inom en månad på{" "}
+            <a href="mailto:sandra80fredrik78@gmail.com">
+              sandra80fredrik78@gmail.com
+            </a>
           </p>
         </div>
+        <img
+          src={down_right_corner}
+          className="App-DR"
+          alt="down_right_corner"
+        />
       </div>
-
-      <img src={upper_left_corner} className="App-UL" alt="upper_left_corner" />
-      <img src={down_right_corner} className="App-DR" alt="down_right_corner" />
     </div>
   );
 }
