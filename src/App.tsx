@@ -41,7 +41,7 @@ function App(): JSX.Element {
             Barn är underbara men den här dagen väljer vi att fira i vuxet
             sällskap. Med undantag av syskonbarn.
           </p>
-          <p>Klädsel: Kostym</p>
+          <p>Klädsel: Mörk Kostym</p>
 
           <p>
             Presenter: Vi önskar inte några saker, det viktiga är att ni kommer
