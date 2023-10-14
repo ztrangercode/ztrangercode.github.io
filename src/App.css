@@ -52,7 +52,6 @@ p {
   display: table;
   margin: 10px auto;
   padding: 5px;
-  font-size: 20px;
   color: black;
   overflow: hidden;
 
@@ -74,6 +73,6 @@ a:hover {
     margin: 0 auto;
   }
   .LargeNames {
-    font-size: calc(10px + 4vmin);
+    font-size: calc(20px + 4vmin);
   }
 }
