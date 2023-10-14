@@ -32,7 +32,7 @@ function App(): JSX.Element {
               Moholms Herrgård, 549 92 Moholm
             </a>
           </p>
-          <p>
+          <p className="signup">
             <a href="https://forms.gle/9UbNJMQUdg6XDWuy5">
               Klicka här för att anmäla er
             </a>
