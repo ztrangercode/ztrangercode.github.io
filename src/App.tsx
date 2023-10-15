@@ -60,11 +60,14 @@ function App(): JSX.Element {
             <a href="https://www.hotelwictoria.se/sv">Hotel Wictoria</a>
             <br />
             <a href="https://hotelvanerport.se/">Hotell Vänerport</a>
-            <br />
-            Obs om ni vill sova på herrgården kontakta oss inom en månad på{" "}
+          </p>
+          <p>
+            Kontakta oss på{" "}
             <a href="mailto:sandra80fredrik78@gmail.com">
               sandra80fredrik78@gmail.com
             </a>
+            <br />
+            eller ring 076-1671572 om ni har några frågor.
           </p>
         </div>
         <img
