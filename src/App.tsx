@@ -36,35 +36,30 @@ function App(): JSX.Element {
               Klicka här för att anmäla er
             </a>
           </p>
+          <p>Klädsel: Kostym</p>
           <p>
             Barn är underbara men den här dagen väljer vi att fira i vuxet
             sällskap. Med undantag av syskonbarn.
           </p>
-          <p>Klädsel: Mörk Kostym</p>
+
+          <p>
+            Övernattning:{" "}
+            <a href="http://www.moholmsherrgard.se/hotellrum.html">
+              Moholms Herrgård
+            </a>
+            {" eller Mariestad (20 km)"}
+          </p>
 
           <p>
             Presenter: Vi önskar inte några saker, det viktiga är att ni kommer
             och firar med oss. Om ni ändå vill ge något, kan ni ge oss ett
-            bidrag till våran Bröllopsresa. Swish 076-1671572 Fredrik Aronsson.
-          </p>
-
-          <p>
-            Övernattning:
-            <br />
-            Herrgården eller Mariestad (20 km) <br />
-            <a href="http://www.moholmsherrgard.se/hotellrum.html">
-              Moholms Herrgård
-            </a>
-            <br />
-            <a href="https://www.hotelwictoria.se/sv">Hotel Wictoria</a>
-            <br />
-            <a href="https://hotelvanerport.se/">Hotell Vänerport</a>
+            bidrag till vår bröllopsresa! Swish 076-1671572 Fredrik Aronsson.
           </p>
           <p>
-            Foto och film! Vi kommer inte ha någon fotograf, men dela gärna era
-            bilder med oss! Vi kan rekommendera{" "}
-            <a href="https://sprend.com/sv">Sprend</a> eller dela ett google
-            foto album med vår epost nedan.
+            Foto och film! Vi kommer inte ha någon fotograf, så dela gärna era
+            bilder och filmer med oss! Vi kan rekommendera{" "}
+            <a href="https://sprend.com/sv">Sprend</a> eller dela ett Google
+            fotoalbum med vår epost nedan.
           </p>
           <p>
             Kontakta oss på{" "}
