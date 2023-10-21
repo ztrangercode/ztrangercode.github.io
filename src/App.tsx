@@ -61,12 +61,10 @@ function App(): JSX.Element {
             <a href="https://hotelvanerport.se/">Hotell Vänerport</a>
           </p>
           <p>
-            Foto och film! Ta gärna bilder på vigsel / fest och lägg till i
-            detta album:{" "}
-            <a href="https://photos.app.goo.gl/iDcsxaxTU29wBJ9m8">
-              Sandra och Fredriks bröllop
-            </a>
-            {" eller skicka till vår email så lägger vi in det i albumet."}
+            Foto och film! Vi kommer inte ha någon fotograf, men dela gärna era
+            bilder med oss! Vi kan rekommendera{" "}
+            <a href="https://sprend.com/sv">Sprend</a> eller dela ett google
+            foto album med vår epost nedan.
           </p>
           <p>
             Kontakta oss på{" "}
