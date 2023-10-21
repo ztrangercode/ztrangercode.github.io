@@ -1,7 +1,6 @@
 //import { useMediaQuery } from 'react-responsive'
 import down_right_corner from "./Down_right_corner.webp";
 import upper_left_corner from "./Upper_left_corner.webp";
-import swish_qr from "./swish-QR-small.webp";
 import "./App.css";
 
 function App(): JSX.Element {
@@ -60,6 +59,14 @@ function App(): JSX.Element {
             <a href="https://www.hotelwictoria.se/sv">Hotel Wictoria</a>
             <br />
             <a href="https://hotelvanerport.se/">Hotell Vänerport</a>
+          </p>
+          <p>
+            Foto och film! Ta gärna bilder på vigsel / fest och lägg till i
+            detta album:{" "}
+            <a href="https://photos.app.goo.gl/iDcsxaxTU29wBJ9m8">
+              Sandra och Fredriks bröllop
+            </a>
+            {" eller skicka till vår email så lägger vi in det i albumet."}
           </p>
           <p>
             Kontakta oss på{" "}
