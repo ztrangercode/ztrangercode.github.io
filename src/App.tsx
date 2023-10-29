@@ -18,9 +18,7 @@ function App(): JSX.Element {
             <span className="LargeNames">Sandra och Fredrik</span>
           </p>
           <p>
-            <a href="https://goo.gl/maps/5kBNjbF8HrQjau8W9">
-              Mo Kyrka, 549 92 Moholm
-            </a>
+            <a href="https://goo.gl/maps/5kBNjbF8HrQjau8W9">Mo Kyrka, Moholm</a>
             <br />
             Lördagen den 20:e Juli 2024, kl. 14:00 <br />
           </p>
@@ -28,7 +26,7 @@ function App(): JSX.Element {
             Därefter middag och fest på
             <br />
             <a href="https://goo.gl/maps/joCJhbMj3YbN5z6p7">
-              Moholms Herrgård, 549 92 Moholm
+              Moholms Herrgård, Moholm
             </a>
           </p>
           <p className="signup">
