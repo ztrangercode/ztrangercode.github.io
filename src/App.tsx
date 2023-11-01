@@ -41,6 +41,11 @@ function App(): JSX.Element {
           </p>
 
           <p>
+            Vi kommer ha en gäst med astma, tål ej parfym, starkt luktande
+            blommor (syren, liljekonvalj m.fl.), tobaksrök.
+          </p>
+
+          <p>
             Övernattning:{" "}
             <a href="http://www.moholmsherrgard.se/hotellrum.html">
               Moholms Herrgård
