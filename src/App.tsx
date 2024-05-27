@@ -18,9 +18,11 @@ function App(): JSX.Element {
             <span className="LargeNames">Sandra och Fredrik</span>
           </p>
           <p>
-            <a href="https://goo.gl/maps/5kBNjbF8HrQjau8W9">Mo Kyrka, Moholm</a>
+            <a href="https://maps.app.goo.gl/aLS6Sfv6CpARh5Kc6">
+              Ransbergs Kyrka, Örlenvägen 5, Tibro
+            </a>
             <br />
-            Lördagen den 20:e Juli 2024, kl. 14:00 <br />
+            Lördagen den 20:e Juli 2024, kl. 15:00 <br />
           </p>
           <p>
             Därefter middag och fest på
