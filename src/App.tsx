@@ -1,5 +1,5 @@
 //import { useMediaQuery } from 'react-responsive'
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Link } from "react-router-dom";
 import PuzzleSolutions from "./PuzzleSolutions";
 import Wedding from "./Wedding";
 import down_right_corner from "./Down_right_corner.webp";

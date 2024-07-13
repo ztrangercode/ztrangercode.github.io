@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import SudokuSolution from "./SudokuSolution";
 
 const PuzzleSolutions: React.FC = () => {
   interface TimeLeft {
@@ -9,8 +10,15 @@ const PuzzleSolutions: React.FC = () => {
     sekunder: number;
   }
 
+  const isDevelopmentMode = process.env.NODE_ENV === "development";
+
   const calculateTimeLeft = () => {
-    const difference = +new Date("2024-07-20T22:00:00") - +new Date();
+    // If in development mode, bypass the timer
+    if (isDevelopmentMode) {
+      return { dagar: 0, timmar: 0, minuter: 0, sekunder: 0 };
+    }
+
+    const difference = +new Date("2024-07-20T18:00:00") - +new Date();
     let timeLeft: TimeLeft = { dagar: 0, timmar: 0, minuter: 0, sekunder: 0 };
     if (difference > 0) {
       timeLeft = {
@@ -27,12 +35,13 @@ const PuzzleSolutions: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  });
+    if (!isDevelopmentMode) {
+      const timer = setTimeout(() => {
+        // Timer logic for production
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [timeLeft]);
 
   const timerComponents: React.ReactNode[] = [];
 
@@ -50,13 +59,15 @@ const PuzzleSolutions: React.FC = () => {
 
   return (
     <div className="article">
-      <span className="LargeNames">Bröllopspussellösningar</span>
+      <p>
+        <span className="LargeNames">Bröllopspussellösningar</span>
+      </p>
       {timerComponents.length ? (
         <div>{timerComponents}</div>
       ) : (
         <div>
           {/* Solutions content goes here */}
-          <p>Lösningarna är nu synliga!</p>
+          <SudokuSolution />
         </div>
       )}
       <Link to="/">Tillbaka till bröllopet</Link>
