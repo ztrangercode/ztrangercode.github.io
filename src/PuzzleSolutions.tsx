@@ -2,10 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const PuzzleSolutions: React.FC = () => {
+  interface TimeLeft {
+    dagar: number;
+    timmar: number;
+    minuter: number;
+    sekunder: number;
+  }
+
   const calculateTimeLeft = () => {
     const difference = +new Date("2024-07-20T22:00:00") - +new Date();
-    let timeLeft = {};
-
+    let timeLeft: TimeLeft = { dagar: 0, timmar: 0, minuter: 0, sekunder: 0 };
     if (difference > 0) {
       timeLeft = {
         dagar: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -18,7 +24,7 @@ const PuzzleSolutions: React.FC = () => {
     return timeLeft;
   };
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -28,16 +34,16 @@ const PuzzleSolutions: React.FC = () => {
     return () => clearTimeout(timer);
   });
 
-  const timerComponents = [];
+  const timerComponents: React.ReactNode[] = [];
 
   Object.keys(timeLeft).forEach((interval) => {
-    if (!timeLeft[interval]) {
+    if (!timeLeft[interval as keyof TimeLeft]) {
       return;
     }
 
     timerComponents.push(
       <span key={interval}>
-        {timeLeft[interval]} {interval}{" "}
+        {timeLeft[interval as keyof TimeLeft]} {interval}{" "}
       </span>
     );
   });
