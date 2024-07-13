@@ -1,0 +1,30 @@
+/* SudokuSolution.css */
+.sudoku-row {
+  display: flex;
+}
+
+.sudoku-cell {
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Add the thicker border styles here as previously described */
+.sudoku-row:nth-child(3n) .sudoku-cell {
+  border-bottom: 3px solid black;
+}
+
+.sudoku-cell:nth-child(3n) {
+  border-right: 3px solid black;
+}
+
+.thick-top-border {
+  border-top: 3px solid black;
+}
+
+.thick-left-border {
+  border-left: 3px solid black;
+}
