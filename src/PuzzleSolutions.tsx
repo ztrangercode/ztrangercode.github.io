@@ -15,6 +15,8 @@ const PuzzleSolutions: React.FC = () => {
     minuter: 0,
     sekunder: 0,
   });
+  const [isLoading, setIsLoading] = useState(true); // New loading state
+
   const isDevelopmentMode = process.env.NODE_ENV === "development";
 
   const calculateTimeLeft = () => {
@@ -37,6 +39,9 @@ const PuzzleSolutions: React.FC = () => {
   };
 
   useEffect(() => {
+    setTimeLeft(calculateTimeLeft()); // Perform initial calculation
+    setIsLoading(false); // Set loading to false after initial calculation
+
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
@@ -44,7 +49,7 @@ const PuzzleSolutions: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const timerComponents: React.ReactNode[] = [];
+  let timerComponents: JSX.Element[] = [];
 
   Object.keys(timeLeft).forEach((interval) => {
     if (!timeLeft[interval as keyof TimeLeft]) {
@@ -57,6 +62,14 @@ const PuzzleSolutions: React.FC = () => {
       </span>
     );
   });
+
+  if (isLoading) {
+    return (
+      <div className="spinner-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="article">
