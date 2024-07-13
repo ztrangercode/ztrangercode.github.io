@@ -1,4 +1,13 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
 .App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full viewport height */
   background-color: grey;
 }
 
@@ -31,6 +40,9 @@
 }
 
 .container {
+  flex: 1; /* Allows container to expand and fill available space, pushing bottom elements down */
+  display: flex;
+  flex-direction: column;
   position: relative;
   background-color: white;
 }
