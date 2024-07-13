@@ -9,7 +9,12 @@ const PuzzleSolutions: React.FC = () => {
     minuter: number;
     sekunder: number;
   }
-
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
+    dagar: 0,
+    timmar: 0,
+    minuter: 0,
+    sekunder: 0,
+  });
   const isDevelopmentMode = process.env.NODE_ENV === "development";
 
   const calculateTimeLeft = () => {
@@ -19,9 +24,8 @@ const PuzzleSolutions: React.FC = () => {
     }
 
     const difference = +new Date("2024-07-20T18:00:00") - +new Date();
-    let timeLeft: TimeLeft = { dagar: 0, timmar: 0, minuter: 0, sekunder: 0 };
     if (difference > 0) {
-      timeLeft = {
+      return {
         dagar: Math.floor(difference / (1000 * 60 * 60 * 24)),
         timmar: Math.floor((difference / (1000 * 60 * 60)) % 24),
         minuter: Math.floor((difference / 1000 / 60) % 60),
@@ -29,19 +33,16 @@ const PuzzleSolutions: React.FC = () => {
       };
     }
 
-    return timeLeft;
+    return { dagar: 0, timmar: 0, minuter: 0, sekunder: 0 };
   };
 
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
-
   useEffect(() => {
-    if (!isDevelopmentMode) {
-      const timer = setTimeout(() => {
-        // Timer logic for production
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [timeLeft]);
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const timerComponents: React.ReactNode[] = [];
 
