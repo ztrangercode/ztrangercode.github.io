@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SudokuSolution from "./SudokuSolution";
+import wordsearch from "./wordsearch.png";
+import crossword from "./crossword.png";
 
 const PuzzleSolutions: React.FC = () => {
   interface TimeLeft {
@@ -17,7 +19,10 @@ const PuzzleSolutions: React.FC = () => {
   });
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
-  const isDevelopmentMode = process.env.NODE_ENV === "development";
+  // Check if the app is in development mode or if get parameter is set
+  const isDevelopmentMode =
+    process.env.NODE_ENV === "development" ||
+    new URLSearchParams(window.location.search).get("dev") === "true";
 
   const calculateTimeLeft = () => {
     // If in development mode, bypass the timer
@@ -79,9 +84,11 @@ const PuzzleSolutions: React.FC = () => {
       {timerComponents.length ? (
         <div>{timerComponents}</div>
       ) : (
-        <div>
+        <div className="solutions-container">
           {/* Solutions content goes here */}
           <SudokuSolution />
+          <img src={wordsearch} alt="Word Search Puzzle" />
+          <img src={crossword} alt="Crossword Puzzle" />
         </div>
       )}
       <Link to="/">Tillbaka till bröllopet</Link>
