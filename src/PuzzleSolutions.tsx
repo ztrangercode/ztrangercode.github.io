@@ -89,8 +89,16 @@ const PuzzleSolutions: React.FC = () => {
         <div className="solutions-container">
           {/* Solutions content goes here */}
           <SudokuSolution />
-          <img src={wordsearch} alt="Word Search Puzzle" />
-          <img src={crossword} alt="Crossword Puzzle" />
+          <img
+            src={wordsearch}
+            alt="Word Search Puzzle"
+            className="solutions-image"
+          />
+          <img
+            src={crossword}
+            alt="Crossword Puzzle"
+            className="solutions-image"
+          />
         </div>
       )}
       <Link to="/">Tillbaka till bröllopet</Link>
