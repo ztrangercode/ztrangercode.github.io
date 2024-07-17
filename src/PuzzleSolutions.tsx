@@ -19,12 +19,7 @@ const PuzzleSolutions: React.FC = () => {
   });
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
-  // Check if the app is in development mode or if get parameter is set
-  const isDevelopmentMode =
-    process.env.NODE_ENV === "development" ||
-    new URLSearchParams(window.location.search).get("dev") === "true";
-
-  const calculateTimeLeft = () => {
+  const calculateTimeLeft = (isDevelopmentMode: boolean) => {
     // If in development mode, bypass the timer
     if (isDevelopmentMode) {
       return { dagar: 0, timmar: 0, minuter: 0, sekunder: 0 };
@@ -44,11 +39,18 @@ const PuzzleSolutions: React.FC = () => {
   };
 
   useEffect(() => {
-    setTimeLeft(calculateTimeLeft()); // Perform initial calculation
+    // Check if the app is in development mode or if get parameter is set to true
+    const hash = window.location.hash;
+    const queryParams = new URLSearchParams(hash.split("?")[1]); // Split the hash to get query params
+    const isDevQueryParam = queryParams.get("dev") === "true";
+    const isDevelopmentMode =
+      process.env.NODE_ENV === "development" || isDevQueryParam;
+
+    setTimeLeft(calculateTimeLeft(isDevelopmentMode)); // Perform initial calculation
     setIsLoading(false); // Set loading to false after initial calculation
 
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      setTimeLeft(calculateTimeLeft(isDevelopmentMode));
     }, 1000);
 
     return () => clearInterval(timer);
