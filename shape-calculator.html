@@ -429,6 +429,236 @@
         `;
       }
 
+      // Calculate belt requirements for a shape definition
+      function calculateBeltRequirements(shapeDefinition) {
+        // Initialize counters for shapes and colors
+        const shapeCount = { C: 0, R: 0, S: 0, W: 0 };
+        const colorCount = { r: 0, g: 0, b: 0, y: 0, c: 0, p: 0, w: 0, u: 0 };
+        
+        // Split the shape definition into layers
+        const layers = shapeDefinition.split(':');
+        
+        // Process each layer
+        for (const layer of layers) {
+          // Process each quadrant in the layer (each layer has 4 quadrants, each quadrant is 2 characters)
+          for (let i = 0; i < layer.length; i += 2) {
+            const quadrant = layer.substring(i, i + 2);
+            
+            // Skip empty quadrants
+            if (quadrant === '--') continue;
+            
+            // First character is the shape, second is the color
+            const shape = quadrant[0];
+            const color = quadrant[1];
+            
+            // Increment the appropriate counters
+            if (shape in shapeCount) {
+              shapeCount[shape]++;
+            }
+            
+            if (color in colorCount) {
+              colorCount[color]++;
+            }
+          }
+        }
+        
+        // Calculate belt requirements
+        // For shapes: Total count / 4 (since a belt carries a full shape with 4 quadrants)
+        // For colors: Total count / 8 (since a color belt needs 1/2 belt per full shape, meaning 1/8 per quadrant)
+        const beltRequirements = {
+          shapes: {},
+          colors: {},
+          totalShapes: 0,
+          totalColors: 0
+        };
+        
+        for (const shape in shapeCount) {
+          const belts = shapeCount[shape] / 4;
+          beltRequirements.shapes[shape] = belts;
+          beltRequirements.totalShapes += belts;
+        }
+        
+        for (const color in colorCount) {
+          // Skip uncolored as it doesn't need to be supplied
+          if (color === 'u') continue;
+          
+          const belts = colorCount[color] / 8; // Double painter means 1/2 belt per full shape
+          beltRequirements.colors[color] = belts;
+          beltRequirements.totalColors += belts;
+        }
+        
+        return beltRequirements;
+      }
+      
+      // Calculate the percentile value from an array of numbers
+      function calculatePercentile(values, percentile) {
+        if (values.length === 0) return 0;
+        
+        // Sort the values in ascending order
+        const sorted = [...values].sort((a, b) => a - b);
+        
+        // Calculate the index for this percentile
+        const index = Math.ceil((percentile / 100) * sorted.length) - 1;
+        
+        // Return the value at that index
+        return sorted[Math.max(0, index)];
+      }
+      
+      // Helper functions for getting human-readable names
+      function getShapeName(shape) {
+        const shapeNames = {
+          'C': 'Circle',
+          'R': 'Rectangle',
+          'S': 'Star',
+          'W': 'Windmill'
+        };
+        return shapeNames[shape] || shape;
+      }
+      
+      function getColorName(color) {
+        const colorNames = {
+          'r': 'Red',
+          'g': 'Green',
+          'b': 'Blue',
+          'y': 'Yellow',
+          'c': 'Cyan',
+          'p': 'Purple',
+          'w': 'White',
+          'u': 'Uncolored'
+        };
+        return colorNames[color] || color;
+      }
+      
+      // Simulate production with unlimited storage
+      function simulateUnlimitedStorage(allShapeData) {
+        // Calculate maximum and average requirements
+        const maxRequirements = {
+          shapes: { C: 0, R: 0, S: 0, W: 0 },
+          colors: { r: 0, g: 0, b: 0, y: 0, c: 0, p: 0, w: 0 }
+        };
+        
+        const avgRequirements = {
+          shapes: { C: 0, R: 0, S: 0, W: 0 },
+          colors: { r: 0, g: 0, b: 0, y: 0, c: 0, p: 0, w: 0 }
+        };
+        
+        const levelCount = allShapeData.length;
+        
+        // First pass: calculate average and max requirements
+        for (const data of allShapeData) {
+          for (const shape in data.beltRequirements.shapes) {
+            const req = data.beltRequirements.shapes[shape] || 0;
+            avgRequirements.shapes[shape] = (avgRequirements.shapes[shape] || 0) + req / levelCount;
+            maxRequirements.shapes[shape] = Math.max(maxRequirements.shapes[shape] || 0, req);
+          }
+          
+          for (const color in data.beltRequirements.colors) {
+            const req = data.beltRequirements.colors[color] || 0;
+            avgRequirements.colors[color] = (avgRequirements.colors[color] || 0) + req / levelCount;
+            maxRequirements.colors[color] = Math.max(maxRequirements.colors[color] || 0, req);
+          }
+        }
+        
+        // Calculate effective requirements with storage
+        const effectiveRequirements = {
+          shapes: { C: 0, R: 0, S: 0, W: 0 },
+          colors: { r: 0, g: 0, b: 0, y: 0, c: 0, p: 0, w: 0 },
+          totalShapes: 0,
+          totalColors: 0
+        };
+        
+        const maxStorage = {
+          shapes: { C: 0, R: 0, S: 0, W: 0 },
+          colors: { r: 0, g: 0, b: 0, y: 0, c: 0, p: 0, w: 0 }
+        };
+        
+        // Test if a given input rate is sufficient with unlimited storage
+        function isInputRateViable(resource, resourceType, inputRate) {
+          let currentStorage = 0;
+          let maxStorageUsed = 0;
+          
+          // Process all levels sequentially
+          for (const data of allShapeData) {
+            const required = (resourceType === 'shapes' ? 
+                            data.beltRequirements.shapes[resource] : 
+                            data.beltRequirements.colors[resource]) || 0;
+            
+            // Calculate excess/deficit for this level
+            const delta = inputRate - required;
+            
+            // Update storage
+            currentStorage += delta;
+            
+            // If we ever have negative storage that we can't recover from, this rate is insufficient
+            if (currentStorage < 0) {
+              return { viable: false, maxStorage: 0 };
+            }
+            
+            // Track max storage needed during simulation
+            maxStorageUsed = Math.max(maxStorageUsed, currentStorage);
+          }
+          
+          return { viable: true, maxStorage: maxStorageUsed };
+        }
+        
+        // Binary search to find minimum viable input rate
+        function findMinimumInputRate(resource, resourceType) {
+          const avgRate = avgRequirements[resourceType][resource] || 0;
+          const maxRate = maxRequirements[resourceType][resource] || 0;
+          
+          // If average is zero or equals max, no benefit from storage
+          if (avgRate === 0 || avgRate >= maxRate) return { rate: avgRate, storage: 0 };
+          
+          // Binary search between average and max to find minimum viable rate
+          let low = avgRate;
+          let high = maxRate;
+          let bestResult = { rate: maxRate, storage: 0 };
+          const PRECISION = 0.001;
+          
+          while (high - low > PRECISION) {
+            const mid = (low + high) / 2;
+            const result = isInputRateViable(resource, resourceType, mid);
+            
+            if (result.viable) {
+              // This rate works, try to go lower
+              bestResult = { rate: mid, storage: result.maxStorage };
+              high = mid;
+            } else {
+              // This rate doesn't work, try higher
+              low = mid;
+            }
+          }
+          
+          return bestResult;
+        }
+        
+        // Find minimum input rates for all resources
+        for (const shape in avgRequirements.shapes) {
+          if (avgRequirements.shapes[shape] > 0) {
+            const { rate, storage } = findMinimumInputRate(shape, 'shapes');
+            effectiveRequirements.shapes[shape] = rate;
+            effectiveRequirements.totalShapes += rate;
+            maxStorage.shapes[shape] = storage;
+          }
+        }
+        
+        for (const color in avgRequirements.colors) {
+          if (avgRequirements.colors[color] > 0) {
+            const { rate, storage } = findMinimumInputRate(color, 'colors');
+            effectiveRequirements.colors[color] = rate;
+            effectiveRequirements.totalColors += rate;
+            maxStorage.colors[color] = storage;
+          }
+        }
+        
+        return {
+          effectiveRequirements,
+          maxStorage,
+          avgRequirements,
+          maxRequirements
+        };
+      }
+
       // Calculate shapes for a range of levels
       function calculateShapeRange() {
         const startLevel = parseInt(
@@ -466,7 +696,7 @@
         }
 
         document.getElementById("range-result").innerHTML =
-          '<div class="loading">Calculating shapes...</div>';
+          '<div class="loading">Calculating shapes and analyzing requirements...</div>';
 
         // Use setTimeout to allow the UI to update before starting the calculation
         setTimeout(() => {
@@ -475,25 +705,313 @@
             `Calculating shapes for levels ${startLevel} to ${endLevel} with seed ${seed}`
           );
 
-          let resultHTML = `
-            <h3>Shapes for levels ${startLevel} to ${endLevel} with seed ${seed}</h3>
-            <div style="max-height: 500px; overflow-y: auto;">
+          // Add some CSS styles for the results
+          const styleElement = document.createElement('style');
+          styleElement.textContent = `
+            table {
+              border-collapse: collapse;
+              width: 100%;
+              margin-bottom: 20px;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              padding: 8px;
+              text-align: left;
+            }
+            th {
+              background-color: #f2f2f2;
+            }
+            tr:nth-child(even) {
+              background-color: #f9f9f9;
+            }
+            tr.total {
+              background-color: #e9f5e9;
+            }
+            tr.grand-total {
+              background-color: #d4ebd4;
+              font-weight: bold;
+            }
+            .load-more-btn {
+              display: block;
+              margin: 15px auto;
+              padding: 8px 15px;
+              background-color: #4caf50;
+              color: white;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+            }
+            .shape-details {
+              margin-top: 5px;
+              font-size: 0.9em;
+              color: #666;
+            }
+            .load-more-btn:hover {
+              background-color: #45a049;
+            }
           `;
+          document.head.appendChild(styleElement);
 
-          // Generate shapes for each level in the range
+          // Store all shape data
+          const allShapeData = [];
+          
+          // Track totals and maximums
+          const totalRequirements = {
+            shapes: { C: 0, R: 0, S: 0, W: 0 },
+            colors: { r: 0, g: 0, b: 0, y: 0, c: 0, p: 0, w: 0 },
+            totalShapes: 0,
+            totalColors: 0
+          };
+          
+          const maxRequirements = {
+            shapes: { C: 0, R: 0, S: 0, W: 0 },
+            colors: { r: 0, g: 0, b: 0, y: 0, c: 0, p: 0, w: 0 },
+            totalShapes: 0,
+            totalColors: 0,
+            totalOverall: 0
+          };
+          
+          // Extract values for percentile calculation
+          const percentileValues = {
+            shapes: { C: [], R: [], S: [], W: [] },
+            colors: { r: [], g: [], b: [], y: [], c: [], p: [], w: [] }
+          };
+          
+          // Generate shapes and calculate requirements
           for (let level = startLevel; level <= endLevel; level++) {
             const shapeDefinition = computeFreeplayShape(level, seed);
-            resultHTML += `
-              <div class="shape-item">
-                <strong>Level ${level}:</strong> ${shapeDefinition}
-              </div>
+            const beltRequirements = calculateBeltRequirements(shapeDefinition);
+            
+            // Store this data for later use
+            allShapeData.push({
+              level: level,
+              shapeDefinition: shapeDefinition,
+              beltRequirements: beltRequirements
+            });
+            
+            // Update totals
+            for (const shape in beltRequirements.shapes) {
+              totalRequirements.shapes[shape] += beltRequirements.shapes[shape];
+              maxRequirements.shapes[shape] = Math.max(maxRequirements.shapes[shape], beltRequirements.shapes[shape]);
+              percentileValues.shapes[shape].push(beltRequirements.shapes[shape]);
+            }
+            
+            for (const color in beltRequirements.colors) {
+              totalRequirements.colors[color] += beltRequirements.colors[color];
+              maxRequirements.colors[color] = Math.max(maxRequirements.colors[color], beltRequirements.colors[color]);
+              percentileValues.colors[color].push(beltRequirements.colors[color]);
+            }
+            
+            // Update total counters
+            totalRequirements.totalShapes += beltRequirements.totalShapes;
+            totalRequirements.totalColors += beltRequirements.totalColors;
+            
+            const totalForLevel = beltRequirements.totalShapes + beltRequirements.totalColors;
+            maxRequirements.totalShapes = Math.max(maxRequirements.totalShapes, beltRequirements.totalShapes);
+            maxRequirements.totalColors = Math.max(maxRequirements.totalColors, beltRequirements.totalColors);
+            maxRequirements.totalOverall = Math.max(maxRequirements.totalOverall, totalForLevel);
+          }
+          
+          // Function to finish calculation and display results
+          function finishCalculation() {
+            // Calculate number of levels for averaging
+            const levelCount = endLevel - startLevel + 1;
+            
+            // Start with summary table
+            let resultHTML = `
+              <h3>Shapes for levels ${startLevel} to ${endLevel} with seed ${seed}</h3>
+              
+              <h3>Summary for all levels</h3>
+              <table>
+                <tr>
+                  <th>Type</th>
+                  <th>Average</th>
+                  <th>Maximum</th>
+                  <th>90%</th>
+                  <th>95%</th>
+                  <th>99%</th>
+                </tr>
             `;
+            
+            // Add shapes to summary
+            for (const shape in totalRequirements.shapes) {
+              if (totalRequirements.shapes[shape] > 0) {
+                resultHTML += `
+                  <tr>
+                    <td>${getShapeName(shape)}</td>
+                    <td>${(totalRequirements.shapes[shape] / levelCount).toFixed(2)} belts</td>
+                    <td>${maxRequirements.shapes[shape].toFixed(2)} belts</td>
+                    <td>${calculatePercentile(percentileValues.shapes[shape], 90).toFixed(2)} belts</td>
+                    <td>${calculatePercentile(percentileValues.shapes[shape], 95).toFixed(2)} belts</td>
+                    <td>${calculatePercentile(percentileValues.shapes[shape], 99).toFixed(2)} belts</td>
+                  </tr>
+                `;
+              }
+            }
+            
+            // Add colors to summary
+            for (const color in totalRequirements.colors) {
+              if (totalRequirements.colors[color] > 0) {
+                resultHTML += `
+                  <tr>
+                    <td>${getColorName(color)}</td>
+                    <td>${(totalRequirements.colors[color] / levelCount).toFixed(2)} belts</td>
+                    <td>${maxRequirements.colors[color].toFixed(2)} belts</td>
+                    <td>${calculatePercentile(percentileValues.colors[color], 90).toFixed(2)} belts</td>
+                    <td>${calculatePercentile(percentileValues.colors[color], 95).toFixed(2)} belts</td>
+                    <td>${calculatePercentile(percentileValues.colors[color], 99).toFixed(2)} belts</td>
+                  </tr>
+                `;
+              }
+            }
+            
+            // Add totals to summary
+            resultHTML += `
+              <tr class="total">
+                <td><strong>Total Shapes</strong></td>
+                <td><strong>${(totalRequirements.totalShapes / levelCount).toFixed(2)} belts</strong></td>
+                <td><strong>${maxRequirements.totalShapes.toFixed(2)} belts</strong></td>
+                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes), 90).toFixed(2)} belts</strong></td>
+                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes), 95).toFixed(2)} belts</strong></td>
+                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes), 99).toFixed(2)} belts</strong></td>
+              </tr>
+              <tr class="total">
+                <td><strong>Total Colors</strong></td>
+                <td><strong>${(totalRequirements.totalColors / levelCount).toFixed(2)} belts</strong></td>
+                <td><strong>${maxRequirements.totalColors.toFixed(2)} belts</strong></td>
+                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalColors), 90).toFixed(2)} belts</strong></td>
+                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalColors), 95).toFixed(2)} belts</strong></td>
+                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalColors), 99).toFixed(2)} belts</strong></td>
+              </tr>
+              <tr class="grand-total">
+                <td><strong>GRAND TOTAL</strong></td>
+                <td><strong>${((totalRequirements.totalShapes + totalRequirements.totalColors) / levelCount).toFixed(2)} belts</strong></td>
+                <td><strong>${maxRequirements.totalOverall.toFixed(2)} belts</strong></td>
+                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes + d.beltRequirements.totalColors), 90).toFixed(2)} belts</strong></td>
+                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes + d.beltRequirements.totalColors), 95).toFixed(2)} belts</strong></td>
+                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes + d.beltRequirements.totalColors), 99).toFixed(2)} belts</strong></td>
+              </tr>
+            </table>
+            `;
+
+            // Run storage analysis
+            const storageAnalysis = simulateUnlimitedStorage(allShapeData);
+            
+            // Add storage analysis results
+            resultHTML += `
+              <h3>Storage Analysis</h3>
+              <p>Minimum input belts required with unlimited storage capacity:</p>
+              <table>
+                <tr>
+                  <th>Resource</th>
+                  <th>No Storage</th>
+                  <th>With Unlimited Storage</th>
+                  <th>Reduction</th>
+                </tr>
+            `;
+            
+            // Add shape rows
+            for (const shape in maxRequirements.shapes) {
+              if (maxRequirements.shapes[shape] > 0) {
+                const reduction = ((maxRequirements.shapes[shape] - storageAnalysis.effectiveRequirements.shapes[shape]) / maxRequirements.shapes[shape] * 100).toFixed(1);
+                resultHTML += `
+                  <tr>
+                    <td>${getShapeName(shape)}</td>
+                    <td>${maxRequirements.shapes[shape].toFixed(2)} belts</td>
+                    <td>${storageAnalysis.effectiveRequirements.shapes[shape].toFixed(2)} belts</td>
+                    <td>${reduction}% less</td>
+                  </tr>
+                `;
+              }
+            }
+            
+            // Add color rows
+            for (const color in maxRequirements.colors) {
+              if (maxRequirements.colors[color] > 0) {
+                const reduction = ((maxRequirements.colors[color] - storageAnalysis.effectiveRequirements.colors[color]) / maxRequirements.colors[color] * 100).toFixed(1);
+                resultHTML += `
+                  <tr>
+                    <td>${getColorName(color)}</td>
+                    <td>${maxRequirements.colors[color].toFixed(2)} belts</td>
+                    <td>${storageAnalysis.effectiveRequirements.colors[color].toFixed(2)} belts</td>
+                    <td>${reduction}% less</td>
+                  </tr>
+                `;
+              }
+            }
+            
+            // Add totals
+            const totalShapeReduction = ((maxRequirements.totalShapes - storageAnalysis.effectiveRequirements.totalShapes) / maxRequirements.totalShapes * 100).toFixed(1);
+            const totalColorReduction = ((maxRequirements.totalColors - storageAnalysis.effectiveRequirements.totalColors) / maxRequirements.totalColors * 100).toFixed(1);
+            
+            resultHTML += `
+              <tr class="total">
+                <td><strong>Total Shapes</strong></td>
+                <td><strong>${maxRequirements.totalShapes.toFixed(2)} belts</strong></td>
+                <td><strong>${storageAnalysis.effectiveRequirements.totalShapes.toFixed(2)} belts</strong></td>
+                <td><strong>${totalShapeReduction}% less</strong></td>
+              </tr>
+              <tr class="total">
+                <td><strong>Total Colors</strong></td>
+                <td><strong>${maxRequirements.totalColors.toFixed(2)} belts</strong></td>
+                <td><strong>${storageAnalysis.effectiveRequirements.totalColors.toFixed(2)} belts</strong></td>
+                <td><strong>${totalColorReduction}% less</strong></td>
+              </tr>
+            </table>
+            <p><em>Note: With unlimited storage, you can use the minimum input belt capacity shown above to handle all levels.</em></p>
+            
+            <h3>Individual Level Details</h3>
+            <div id="shape-results" style="max-height: 500px; overflow-y: auto;">
+              <!-- Shape details will be loaded here -->
+            </div>
+            <button id="load-more-btn" class="load-more-btn" style="display: none;">Load More</button>
+            `;
+            
+            document.getElementById("range-result").innerHTML = resultHTML;
+            
+            // Set up lazy loading for level details
+            const shapeResults = document.getElementById("shape-results");
+            const loadMoreBtn = document.getElementById("load-more-btn");
+            const BATCH_SIZE = 20;
+            let currentIndex = 0;
+            
+            function loadMoreShapes() {
+              const endIndex = Math.min(currentIndex + BATCH_SIZE, allShapeData.length);
+              let shapesHTML = '';
+              
+              for (let i = currentIndex; i < endIndex; i++) {
+                const data = allShapeData[i];
+                
+                shapesHTML += `
+                  <div class="shape-item">
+                    <strong>Level ${data.level}:</strong> ${data.shapeDefinition}
+                    <div class="shape-details">
+                      Belt requirements: ${data.beltRequirements.totalShapes.toFixed(2)} belts for shapes,
+                      ${data.beltRequirements.totalColors.toFixed(2)} belts for colors
+                    </div>
+                  </div>
+                `;
+              }
+              
+              shapeResults.innerHTML += shapesHTML;
+              currentIndex = endIndex;
+              
+              if (currentIndex >= allShapeData.length) {
+                loadMoreBtn.style.display = "none";
+              } else {
+                loadMoreBtn.style.display = "block";
+              }
+            }
+            
+            // Initial load
+            loadMoreShapes();
+            
+            // Set up load more button
+            loadMoreBtn.addEventListener("click", loadMoreShapes);
           }
 
-          resultHTML += "</div>";
-
-          // Update the result container
-          document.getElementById("range-result").innerHTML = resultHTML;
+          // Start calculation
+          finishCalculation();
         }, 50); // Short delay to allow UI update
       }
 
