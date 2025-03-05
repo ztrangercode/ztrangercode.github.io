@@ -833,17 +833,50 @@
                 </tr>
             `;
             
+            // Track totals for the summary table
+            let totalAvg = 0;
+            let totalMax = 0;
+            let total90 = 0;
+            let total95 = 0;
+            let total99 = 0;
+            
+            // Track separate sums for shapes and colors
+            let shapeAvg = 0;
+            let shapeMax = 0;
+            let shape90 = 0;
+            let shape95 = 0;
+            let shape99 = 0;
+            
+            let colorAvg = 0;
+            let colorMax = 0;
+            let color90 = 0;
+            let color95 = 0;
+            let color99 = 0;
+            
             // Add shapes to summary
             for (const shape in totalRequirements.shapes) {
               if (totalRequirements.shapes[shape] > 0) {
+                const avg = totalRequirements.shapes[shape] / levelCount;
+                const max = maxRequirements.shapes[shape];
+                const p90 = calculatePercentile(percentileValues.shapes[shape], 90);
+                const p95 = calculatePercentile(percentileValues.shapes[shape], 95);
+                const p99 = calculatePercentile(percentileValues.shapes[shape], 99);
+                
+                // Add to shape totals
+                shapeAvg += avg;
+                shapeMax += max;
+                shape90 += p90;
+                shape95 += p95;
+                shape99 += p99;
+                
                 resultHTML += `
                   <tr>
                     <td>${getShapeName(shape)}</td>
-                    <td>${(totalRequirements.shapes[shape] / levelCount).toFixed(2)} belts</td>
-                    <td>${maxRequirements.shapes[shape].toFixed(2)} belts</td>
-                    <td>${calculatePercentile(percentileValues.shapes[shape], 90).toFixed(2)} belts</td>
-                    <td>${calculatePercentile(percentileValues.shapes[shape], 95).toFixed(2)} belts</td>
-                    <td>${calculatePercentile(percentileValues.shapes[shape], 99).toFixed(2)} belts</td>
+                    <td>${avg.toFixed(2)} belts</td>
+                    <td>${max.toFixed(2)} belts</td>
+                    <td>${p90.toFixed(2)} belts</td>
+                    <td>${p95.toFixed(2)} belts</td>
+                    <td>${p99.toFixed(2)} belts</td>
                   </tr>
                 `;
               }
@@ -852,44 +885,57 @@
             // Add colors to summary
             for (const color in totalRequirements.colors) {
               if (totalRequirements.colors[color] > 0) {
+                const avg = totalRequirements.colors[color] / levelCount;
+                const max = maxRequirements.colors[color];
+                const p90 = calculatePercentile(percentileValues.colors[color], 90);
+                const p95 = calculatePercentile(percentileValues.colors[color], 95);
+                const p99 = calculatePercentile(percentileValues.colors[color], 99);
+                
+                // Add to color totals
+                colorAvg += avg;
+                colorMax += max;
+                color90 += p90;
+                color95 += p95;
+                color99 += p99;
+                
                 resultHTML += `
                   <tr>
                     <td>${getColorName(color)}</td>
-                    <td>${(totalRequirements.colors[color] / levelCount).toFixed(2)} belts</td>
-                    <td>${maxRequirements.colors[color].toFixed(2)} belts</td>
-                    <td>${calculatePercentile(percentileValues.colors[color], 90).toFixed(2)} belts</td>
-                    <td>${calculatePercentile(percentileValues.colors[color], 95).toFixed(2)} belts</td>
-                    <td>${calculatePercentile(percentileValues.colors[color], 99).toFixed(2)} belts</td>
+                    <td>${avg.toFixed(2)} belts</td>
+                    <td>${max.toFixed(2)} belts</td>
+                    <td>${p90.toFixed(2)} belts</td>
+                    <td>${p95.toFixed(2)} belts</td>
+                    <td>${p99.toFixed(2)} belts</td>
                   </tr>
                 `;
               }
             }
             
-            // Add totals to summary
+            // Add totals to summary using the sum of individual rows
             resultHTML += `
               <tr class="total">
                 <td><strong>Total Shapes</strong></td>
-                <td><strong>${(totalRequirements.totalShapes / levelCount).toFixed(2)} belts</strong></td>
-                <td><strong>${maxRequirements.totalShapes.toFixed(2)} belts</strong></td>
-                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes), 90).toFixed(2)} belts</strong></td>
-                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes), 95).toFixed(2)} belts</strong></td>
-                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes), 99).toFixed(2)} belts</strong></td>
+                <td><strong>${shapeAvg.toFixed(2)} belts</strong></td>
+                <td><strong>${shapeMax.toFixed(2)} belts</strong></td>
+                <td><strong>${shape90.toFixed(2)} belts</strong></td>
+                <td><strong>${shape95.toFixed(2)} belts</strong></td>
+                <td><strong>${shape99.toFixed(2)} belts</strong></td>
               </tr>
               <tr class="total">
                 <td><strong>Total Colors</strong></td>
-                <td><strong>${(totalRequirements.totalColors / levelCount).toFixed(2)} belts</strong></td>
-                <td><strong>${maxRequirements.totalColors.toFixed(2)} belts</strong></td>
-                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalColors), 90).toFixed(2)} belts</strong></td>
-                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalColors), 95).toFixed(2)} belts</strong></td>
-                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalColors), 99).toFixed(2)} belts</strong></td>
+                <td><strong>${colorAvg.toFixed(2)} belts</strong></td>
+                <td><strong>${colorMax.toFixed(2)} belts</strong></td>
+                <td><strong>${color90.toFixed(2)} belts</strong></td>
+                <td><strong>${color95.toFixed(2)} belts</strong></td>
+                <td><strong>${color99.toFixed(2)} belts</strong></td>
               </tr>
               <tr class="grand-total">
                 <td><strong>GRAND TOTAL</strong></td>
-                <td><strong>${((totalRequirements.totalShapes + totalRequirements.totalColors) / levelCount).toFixed(2)} belts</strong></td>
-                <td><strong>${maxRequirements.totalOverall.toFixed(2)} belts</strong></td>
-                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes + d.beltRequirements.totalColors), 90).toFixed(2)} belts</strong></td>
-                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes + d.beltRequirements.totalColors), 95).toFixed(2)} belts</strong></td>
-                <td><strong>${calculatePercentile(allShapeData.map(d => d.beltRequirements.totalShapes + d.beltRequirements.totalColors), 99).toFixed(2)} belts</strong></td>
+                <td><strong>${(shapeAvg + colorAvg).toFixed(2)} belts</strong></td>
+                <td><strong>${(shapeMax + colorMax).toFixed(2)} belts</strong></td>
+                <td><strong>${(shape90 + color90).toFixed(2)} belts</strong></td>
+                <td><strong>${(shape95 + color95).toFixed(2)} belts</strong></td>
+                <td><strong>${(shape99 + color99).toFixed(2)} belts</strong></td>
               </tr>
             </table>
             `;
@@ -910,15 +956,28 @@
                 </tr>
             `;
             
+            // Track sums for totals
+            let shapesNoStorage = 0;
+            let shapesWithStorage = 0;
+            let colorsNoStorage = 0;
+            let colorsWithStorage = 0;
+            
             // Add shape rows
             for (const shape in maxRequirements.shapes) {
               if (maxRequirements.shapes[shape] > 0) {
-                const reduction = ((maxRequirements.shapes[shape] - storageAnalysis.effectiveRequirements.shapes[shape]) / maxRequirements.shapes[shape] * 100).toFixed(1);
+                const noStorage = maxRequirements.shapes[shape];
+                const withStorage = storageAnalysis.effectiveRequirements.shapes[shape];
+                const reduction = ((noStorage - withStorage) / noStorage * 100).toFixed(1);
+                
+                // Add to shape totals
+                shapesNoStorage += noStorage;
+                shapesWithStorage += withStorage;
+                
                 resultHTML += `
                   <tr>
                     <td>${getShapeName(shape)}</td>
-                    <td>${maxRequirements.shapes[shape].toFixed(2)} belts</td>
-                    <td>${storageAnalysis.effectiveRequirements.shapes[shape].toFixed(2)} belts</td>
+                    <td>${noStorage.toFixed(2)} belts</td>
+                    <td>${withStorage.toFixed(2)} belts</td>
                     <td>${reduction}% less</td>
                   </tr>
                 `;
@@ -928,34 +987,53 @@
             // Add color rows
             for (const color in maxRequirements.colors) {
               if (maxRequirements.colors[color] > 0) {
-                const reduction = ((maxRequirements.colors[color] - storageAnalysis.effectiveRequirements.colors[color]) / maxRequirements.colors[color] * 100).toFixed(1);
+                const noStorage = maxRequirements.colors[color];
+                const withStorage = storageAnalysis.effectiveRequirements.colors[color];
+                const reduction = ((noStorage - withStorage) / noStorage * 100).toFixed(1);
+                
+                // Add to color totals
+                colorsNoStorage += noStorage;
+                colorsWithStorage += withStorage;
+                
                 resultHTML += `
                   <tr>
                     <td>${getColorName(color)}</td>
-                    <td>${maxRequirements.colors[color].toFixed(2)} belts</td>
-                    <td>${storageAnalysis.effectiveRequirements.colors[color].toFixed(2)} belts</td>
+                    <td>${noStorage.toFixed(2)} belts</td>
+                    <td>${withStorage.toFixed(2)} belts</td>
                     <td>${reduction}% less</td>
                   </tr>
                 `;
               }
             }
             
-            // Add totals
-            const totalShapeReduction = ((maxRequirements.totalShapes - storageAnalysis.effectiveRequirements.totalShapes) / maxRequirements.totalShapes * 100).toFixed(1);
-            const totalColorReduction = ((maxRequirements.totalColors - storageAnalysis.effectiveRequirements.totalColors) / maxRequirements.totalColors * 100).toFixed(1);
+            // Calculate reduction percentages for totals
+            const totalShapeReduction = ((shapesNoStorage - shapesWithStorage) / shapesNoStorage * 100).toFixed(1);
+            const totalColorReduction = ((colorsNoStorage - colorsWithStorage) / colorsNoStorage * 100).toFixed(1);
             
+            // Calculate grand total
+            const grandTotalNoStorage = shapesNoStorage + colorsNoStorage;
+            const grandTotalWithStorage = shapesWithStorage + colorsWithStorage;
+            const grandTotalReduction = ((grandTotalNoStorage - grandTotalWithStorage) / grandTotalNoStorage * 100).toFixed(1);
+            
+            // Add totals rows
             resultHTML += `
               <tr class="total">
                 <td><strong>Total Shapes</strong></td>
-                <td><strong>${maxRequirements.totalShapes.toFixed(2)} belts</strong></td>
-                <td><strong>${storageAnalysis.effectiveRequirements.totalShapes.toFixed(2)} belts</strong></td>
+                <td><strong>${shapesNoStorage.toFixed(2)} belts</strong></td>
+                <td><strong>${shapesWithStorage.toFixed(2)} belts</strong></td>
                 <td><strong>${totalShapeReduction}% less</strong></td>
               </tr>
               <tr class="total">
                 <td><strong>Total Colors</strong></td>
-                <td><strong>${maxRequirements.totalColors.toFixed(2)} belts</strong></td>
-                <td><strong>${storageAnalysis.effectiveRequirements.totalColors.toFixed(2)} belts</strong></td>
+                <td><strong>${colorsNoStorage.toFixed(2)} belts</strong></td>
+                <td><strong>${colorsWithStorage.toFixed(2)} belts</strong></td>
                 <td><strong>${totalColorReduction}% less</strong></td>
+              </tr>
+              <tr class="grand-total">
+                <td><strong>GRAND TOTAL</strong></td>
+                <td><strong>${grandTotalNoStorage.toFixed(2)} belts</strong></td>
+                <td><strong>${grandTotalWithStorage.toFixed(2)} belts</strong></td>
+                <td><strong>${grandTotalReduction}% less</strong></td>
               </tr>
             </table>
             <p><em>Note: With unlimited storage, you can use the minimum input belt capacity shown above to handle all levels.</em></p>
