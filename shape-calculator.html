@@ -1045,7 +1045,12 @@
             <button id="load-more-btn" class="load-more-btn" style="display: none;">Load More</button>
             `;
             
+            // After adding storage analysis results
+            
             document.getElementById("range-result").innerHTML = resultHTML;
+            
+            // Add storage flow analysis UI AFTER setting the innerHTML
+            addStorageAnalysisUI(allShapeData, storageAnalysis);
             
             // Set up lazy loading for level details
             const shapeResults = document.getElementById("shape-results");
@@ -1091,6 +1096,134 @@
           // Start calculation
           finishCalculation();
         }, 50); // Short delay to allow UI update
+      }
+
+      // Analyze storage flow with no positive accumulation
+      function analyzeStorageFlow(allShapeData, resource, resourceType, inputRate) {
+        const storageFlow = [];
+        let currentStorage = 0; // Start with empty storage
+        let minimumStorage = 0; // Track the lowest point (most negative)
+        
+        // Process each level sequentially
+        for (const data of allShapeData) {
+          const required = (resourceType === 'shapes' ? 
+                           data.beltRequirements.shapes[resource] : 
+                           data.beltRequirements.colors[resource]) || 0;
+          
+          // Calculate excess/deficit for this level
+          const delta = inputRate - required;
+          
+          // Record current storage before processing this level
+          storageFlow.push({
+            level: data.level,
+            required: required,
+            delta: delta,
+            storageBefore: currentStorage
+          });
+          
+          // Update storage (can't go above 0 - excess gets thrown away)
+          currentStorage = Math.min(0, currentStorage + delta);
+          
+          // Track minimum storage level (most negative value)
+          if (currentStorage < minimumStorage) {
+            minimumStorage = currentStorage;
+          }
+        }
+        
+        // The actual storage needed is the absolute value of the minimum (since it's negative)
+        const storageNeeded = Math.abs(minimumStorage);
+        
+        return {
+          storageFlow,
+          storageNeeded,
+          minimumStorage
+        };
+      }
+
+      // Add this function to display storage analysis UI
+      function addStorageAnalysisUI(allShapeData, storageAnalysis) {
+        // Add storage flow analysis for a selected resource
+        let analysisHTML = `
+          <h3>Storage Flow Analysis</h3>
+          <p>This shows the minimum storage needed for each resource with the optimal input rate.</p>
+          
+          <div class="form-group">
+            <label for="resource-selector">Select Resource:</label>
+            <select id="resource-selector">
+              <option value="shapes-C">Circle</option>
+              <option value="shapes-R">Rectangle</option>
+              <option value="shapes-S">Star</option>
+              <option value="shapes-W">Windmill</option>
+              <option value="colors-r">Red</option>
+              <option value="colors-g">Green</option>
+              <option value="colors-b">Blue</option>
+              <option value="colors-y">Yellow</option>
+              <option value="colors-c">Cyan</option>
+              <option value="colors-p">Purple</option>
+              <option value="colors-w">White</option>
+            </select>
+          </div>
+          
+          <button id="analyze-btn">Analyze Storage Flow</button>
+          
+          <div id="storage-flow-result" style="margin-top: 15px;">
+            <!-- Storage flow results will appear here -->
+          </div>
+        `;
+        
+        document.getElementById("range-result").insertAdjacentHTML('beforeend', analysisHTML);
+        
+        // Set up event listener for analyze button
+        document.getElementById("analyze-btn").addEventListener("click", function() {
+          const selectEl = document.getElementById("resource-selector");
+          const selectedValue = selectEl.value;
+          const [resourceType, resource] = selectedValue.split('-');
+          
+          // Use the optimal input rate from the unlimited storage analysis
+          const inputRate = storageAnalysis.effectiveRequirements[resourceType][resource];
+          
+          // Run the storage flow analysis
+          const flowAnalysis = analyzeStorageFlow(allShapeData, resource, resourceType, inputRate);
+          
+          // Display the results
+          let flowHTML = `
+            <h4>Storage Flow for ${resourceType === 'shapes' ? getShapeName(resource) : getColorName(resource)} with ${inputRate.toFixed(2)} belts input</h4>
+            <p><strong>Minimum storage needed:</strong> ${flowAnalysis.storageNeeded.toFixed(2)} belts</p>
+            <table>
+              <tr>
+                <th>Level</th>
+                <th>Required</th>
+                <th>Excess/Deficit</th>
+                <th>Storage Before</th>
+              </tr>
+          `;
+          
+          for (const flow of flowAnalysis.storageFlow) {
+            // Highlight rows with deficits
+            let rowClass = '';
+            if (flow.delta < 0) rowClass = 'deficit';
+            
+            flowHTML += `
+              <tr class="${rowClass}">
+                <td>${flow.level}</td>
+                <td>${flow.required.toFixed(2)} belts</td>
+                <td>${flow.delta.toFixed(2)} belts</td>
+                <td>${flow.storageBefore.toFixed(2)} belts</td>
+              </tr>
+            `;
+          }
+          
+          flowHTML += `</table>`;
+          
+          // Add some CSS for the flow table
+          flowHTML += `
+            <style>
+              tr.deficit { background-color: #ffe6e6; }
+            </style>
+          `;
+          
+          document.getElementById("storage-flow-result").innerHTML = flowHTML;
+        });
       }
 
       // Assert function for error checking
