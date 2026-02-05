@@ -3,6 +3,12 @@ import { Link } from "react-router-dom";
 import SudokuSolution from "./SudokuSolution";
 import wordsearch from "./wordsearch.png";
 import crossword from "./crossword.png";
+import f1 from "./f1.png";
+import f2 from "./f2.png";
+import f3 from "./f3.png";
+import f4 from "./f4.png";
+import f5 from "./f5.png";
+import f6 from "./f6.png";
 
 const PuzzleSolutions: React.FC = () => {
   interface TimeLeft {
@@ -99,6 +105,12 @@ const PuzzleSolutions: React.FC = () => {
             alt="Crossword Puzzle"
             className="solutions-image"
           />
+          <img src={f1} alt="F1" className="solutions-image" />
+          <img src={f2} alt="F2" className="solutions-image" />
+          <img src={f3} alt="F3" className="solutions-image" />
+          <img src={f4} alt="F4" className="solutions-image" />
+          <img src={f5} alt="F5" className="solutions-image" />
+          <img src={f6} alt="F6" className="solutions-image" />
         </div>
       )}
       <Link to="/">Tillbaka till bröllopet</Link>
